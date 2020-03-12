@@ -11,7 +11,7 @@
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
 <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-analytics.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-messaging-sw.js"></script>
 <script>
   // Your web app's Firebase configuration
   var firebaseConfig = {
@@ -27,6 +27,20 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+const messaging = firebase.messaging();
+messaging.requestPermission()
+  .then(res => {
+    // 若允許通知 -> 向 firebase 拿 token
+    return messaging.getToken();
+  }, err => {
+    // 若拒絕通知
+    console.log(err);  
+  })
+  .then(token => {
+    // 成功取得 token
+    postToken(token); // 打給後端 api
+    console.log(token);
+  })
 </script>
   </body>
 </html>
